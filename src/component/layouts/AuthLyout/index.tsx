@@ -10,7 +10,7 @@ type Proptypes = {
 };
 
 function Authlayout(props: Proptypes) {
-  const { children, title, error, TextLink, link } = props;
+  const { children, title, TextLink, link } = props;
   return (
     <>
       <div className="login-container">
@@ -20,7 +20,7 @@ function Authlayout(props: Proptypes) {
 
           <p className="text-white text-center mt-3">
             {TextLink}{" "}
-            <Link className="text-danger" to={link}>
+            <Link className="text-danger" to={link || "/default-path"}>
               Sign Up
             </Link>
           </p>
