@@ -1,5 +1,3 @@
-import React from "react";
-
 type Proptypes = {
   type: string;
   placeholder: string;
