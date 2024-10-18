@@ -1,0 +1,57 @@
+/* Latar belakang halaman dengan tema gelap */
+body {
+  background-color: #0d1117;
+  color: #ffffff;
+}
+
+/* Container pusat untuk form login */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 1rem;
+}
+
+/* Kartu login dengan tampilan gelap dan bayangan */
+.login-card {
+  background-color: #161b22;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Style teks */
+h2 {
+  font-weight: bold;
+}
+
+/* Label form dengan warna terang */
+.form-label {
+  color: #e0e0e0;
+}
+
+/* Style input form */
+.form-control {
+  background-color: #21262d;
+  color: white;
+  border: 1px solid #30363d;
+}
+
+/* Style input saat fokus */
+.form-control:focus {
+  background-color: #21262d;
+  color: white;
+  border-color: #dc3545;
+  box-shadow: 0 0 5px rgba(220, 53, 69, 0.5);
+}
+
+/* Link forgot password */
+a.text-danger {
+  text-decoration: none;
+}
+
+a.text-danger:hover {
+  text-decoration: underline;
+}
