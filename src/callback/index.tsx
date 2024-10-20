@@ -1,4 +1,3 @@
-// callback.tsx
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createSession } from "../services/auth";
@@ -20,17 +19,17 @@ const CallbackPage: React.FC = () => {
           setIsLogin(true);
           navigate("/home");
         } else {
-          console.error("Failed to create session ID");
+          console.error("Gagal membuat session ID");
         }
       };
 
       createSessionAndRedirect();
     } else {
-      console.error("Request token is missing");
+      console.error("Request token tidak ditemukan");
     }
   }, [navigate, setIsLogin]);
 
-  return <div>Redirecting to home...</div>;
+  return <div>Mengarahkan ke home...</div>;
 };
 
 export default CallbackPage;

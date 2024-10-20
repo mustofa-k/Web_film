@@ -1,20 +1,14 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
-
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import HomePage from "./pages/home";
 import Navbar from "./component/Navbar";
-
 import LoginPage from "./pages/auth/Login";
 import CallbackPage from "./callback";
 import ProfilePage from "./pages/profile";
 
-// Component untuk menyembunyikan Navbar di halaman Login
+// Komponen untuk layout utama, mengatur kapan Navbar tampil
 function AppLayout() {
   const location = useLocation();
-
-  // Navbar tidak akan muncul di halaman login ("/")
-  const hideNavbarRoutes = ["/"]; // Daftar route yang tidak akan menampilkan Navbar
+  const hideNavbarRoutes = ["/"];
 
   return (
     <>
