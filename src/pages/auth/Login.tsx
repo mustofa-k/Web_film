@@ -21,7 +21,7 @@ const LoginPage: React.FC = () => {
         localStorage.setItem("request_token", requestToken);
         redirectToAuthorization(requestToken);
       } else {
-        console.error("Failed to get request token");
+        console.error("Gagal mendapatkan request token");
       }
     } catch (error) {
       console.error("Login error:", error);

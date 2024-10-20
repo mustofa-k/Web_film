@@ -16,12 +16,10 @@ const CallbackPage: React.FC = () => {
         const sessionId = await createSession(requestToken);
         if (sessionId) {
           localStorage.setItem("session_id", sessionId);
-          console.log("Session ID created:", sessionId);
           setIsLogin(true);
           navigate("/home");
         } else {
-          console.error("Gagal membuat session ID");
-          // Tambahkan fallback jika gagal membuat session
+          console.error("Gagal membuat session");
           navigate("/error");
         }
       };
@@ -29,7 +27,6 @@ const CallbackPage: React.FC = () => {
       createSessionAndRedirect();
     } else {
       console.error("Request token tidak ditemukan");
-      // Tambahkan fallback jika token tidak ditemukan
       navigate("/error");
     }
   }, [navigate, setIsLogin]);
