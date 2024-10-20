@@ -33,7 +33,7 @@ export const getRequestToken = async (): Promise<string | null> => {
 
 // Fungsi untuk mengarahkan pengguna ke halaman otorisasi TMDb
 export const redirectToAuthorization = (requestToken: string): void => {
-  const authUrl = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=https://web-film-kamal-rust.vercel.app/callback`;
+  const authUrl = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=https://testenterkode.vercel.app/callback`;
   window.location.href = authUrl;
 };
 
