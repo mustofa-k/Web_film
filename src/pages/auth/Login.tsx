@@ -19,12 +19,12 @@ const LoginPage: React.FC = () => {
       const requestToken = await getRequestToken();
       if (requestToken) {
         localStorage.setItem("request_token", requestToken);
-        redirectToAuthorization(requestToken);
+        redirectToAuthorization(requestToken); // Langsung arahkan ke TMDb dan kembali ke /home
       } else {
-        console.error("Failed to get request token");
+        console.error("Gagal mendapatkan request token");
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Kesalahan saat login:", error);
     } finally {
       setLoading(false);
     }
@@ -36,20 +36,20 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <Authlayout title="Login" TextLink="Don't have an account?" link="/register">
+    <Authlayout title="Login" TextLink="Belum punya akun?" link="/register">
       <form onSubmit={handleLogin}>
-        <FormInput type="email" placeholder="Enter your email" id="email" label="Email" />
-        <FormInput type="password" placeholder="Enter your password" id="password" label="Password" />
+        <FormInput type="email" placeholder="Masukkan email" id="email" label="Email" />
+        <FormInput type="password" placeholder="Masukkan password" id="password" label="Password" />
         <div className="mt-3">
           <a href="#" className="text-white">
-            Forgot Password?
+            Lupa Password?
           </a>
         </div>
         <button type="submit" className="btn btn-danger w-100 mt-4" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
+          {loading ? "Sedang login..." : "Login"}
         </button>
         <button type="button" className="btn btn-secondary w-100 mt-2" onClick={handleGuestLogin}>
-          Continue as Guest
+          Lanjutkan sebagai Tamu
         </button>
       </form>
     </Authlayout>

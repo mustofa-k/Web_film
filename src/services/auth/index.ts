@@ -3,7 +3,7 @@ import axios from "axios";
 // Tentukan API key dan base URL untuk TMDb dari environment variables
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const API_KEY = import.meta.env.VITE_API_KEY;
-const REDIRECT_URL = "https://web-film-test.vercel.app/callback";
+const REDIRECT_URL = "https://web-film-test.vercel.app/home"; // Redirect langsung ke home
 
 interface RequestTokenResponse {
   request_token: string;
