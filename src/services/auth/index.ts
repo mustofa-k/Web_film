@@ -41,7 +41,7 @@ export const getRequestToken = async (): Promise<string | null> => {
 export const redirectToAuthorization = (requestToken: string): void => {
   // Ganti URL localhost ke URL yang benar untuk produksi
   const authUrl = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=https://testenterkode.vercel.app/callback`;
-  console.log("Redirecting to:", authUrl); // Log URL otorisasi
+  console.log("Redirecting to:", authUrl);
   window.location.href = authUrl;
 };
 
@@ -51,8 +51,7 @@ export const createSession = async (requestToken: string): Promise<string | null
     const response = await axios.post<SessionResponse>(`${API_BASE_URL}/authentication/session/new`, { request_token: requestToken }, { params: { api_key: API_KEY } });
 
     if (response.data && response.data.session_id) {
-      // Simpan session ID ke localStorage
-      console.log("Session ID created:", response.data.session_id); // Log session ID
+      console.log("Session ID created:", response.data.session_id);
       localStorage.setItem("session_id", response.data.session_id);
       return response.data.session_id;
     } else {
@@ -80,7 +79,7 @@ export const addToFavorite = async (sessionId: string, accountId: string, movieI
       {
         media_type: "movie",
         media_id: movieId,
-        favorite: isFavorite, // true untuk menambahkan, false untuk menghapus dari favorit
+        favorite: isFavorite,
       },
       {
         params: {

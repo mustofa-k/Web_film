@@ -4,7 +4,7 @@ import { addToFavorite, getAccountDetails } from "../../services/auth";
 import MovieCard from "../../component/card";
 import ModalLogin from "../../component/modal";
 import Notification from "../../component/notif";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Pindahkan useNavigate ke sini
 import "./home.css";
 
 interface Movie {
@@ -24,6 +24,7 @@ const HomePage = () => {
   const limit = 6;
   const [accountId, setAccountId] = useState<string | null>(null);
   const sessionId = localStorage.getItem("session_id");
+  const navigate = useNavigate(); // Inisialisasi useNavigate di sini
 
   useEffect(() => {
     const fetchAllMovies = async () => {
@@ -75,8 +76,9 @@ const HomePage = () => {
     setVisibleMovies((prevVisibleMovies) => prevVisibleMovies + 6);
   };
 
+  // Pindahkan navigate ke sini
   const handleLoginRedirect = () => {
-    window.location.href = "/login";
+    navigate("/login"); // Navigasi tanpa refresh halaman
   };
 
   const handleCloseModal = () => {
