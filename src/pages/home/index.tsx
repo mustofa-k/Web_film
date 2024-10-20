@@ -5,6 +5,7 @@ import MovieCard from "../../component/card";
 import ModalLogin from "../../component/modal";
 import Notification from "../../component/notif";
 import { Link } from "react-router-dom";
+import "./home.css";
 
 interface Movie {
   id: number;
