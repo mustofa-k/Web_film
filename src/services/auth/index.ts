@@ -3,7 +3,6 @@ import axios from "axios";
 // Tentukan API key dan base URL untuk TMDb dari environment variables
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const API_KEY = import.meta.env.VITE_API_KEY;
-const REDIRECT_URL = import.meta.env.VITE_REDIRECT_URL || "http://localhost:5173/callback"; // Redirect URL
 
 interface RequestTokenResponse {
   request_token: string;
@@ -34,7 +33,7 @@ export const getRequestToken = async (): Promise<string | null> => {
 
 // Fungsi untuk mengarahkan pengguna ke halaman otorisasi TMDb
 export const redirectToAuthorization = (requestToken: string): void => {
-  const authUrl = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=${REDIRECT_URL}`;
+  const authUrl = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=https://web-film-kamal-rust.vercel.app/callback`;
   window.location.href = authUrl;
 };
 
