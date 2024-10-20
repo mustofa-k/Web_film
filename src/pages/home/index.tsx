@@ -87,8 +87,8 @@ const HomePage = () => {
       <div className="hero"></div>
       <div className="playing container">
         <div className="header d-flex justify-content-between align-items-center mt-5">
-          <h2 className="text-light">Now Playing</h2>
-          <Link to={"/movies"} className="text-light" style={{ textDecoration: "none" }}>
+          <h2 className="text-dark">Now Playing</h2>
+          <Link to={"/movies"} className="text-dark" style={{ textDecoration: "none" }}>
             {"show more >>"}
           </Link>
         </div>
@@ -109,8 +109,8 @@ const HomePage = () => {
 
       <div className="populer container">
         <div className="header d-flex justify-content-between align-items-center mt-5">
-          <h2 className="text-light">Popular</h2>
-          <Link to={"/movies"} className="text-light" style={{ textDecoration: "none" }}>
+          <h2 className="text-dark">Popular</h2>
+          <Link to={"/movies"} className="text-dark" style={{ textDecoration: "none" }}>
             {"show more >>"}
           </Link>
         </div>
