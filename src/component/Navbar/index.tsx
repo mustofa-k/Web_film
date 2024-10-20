@@ -44,7 +44,7 @@ function Navbar() {
                 </ul>
               </div>
             ) : (
-              <button className="btn btn-outline-danger" type="button" onClick={() => navigate("/")}>
+              <button className="btn btn-outline-danger" type="button" onClick={() => navigate("/login")}>
                 Login
               </button>
             )}

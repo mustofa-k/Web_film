@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { addToFavorite, getAccountDetails, createSession } from "../../services/auth"; // Pastikan createSession diimpor
+import { getMovies } from "../../services/movie";
+import { addToFavorite, getAccountDetails } from "../../services/auth";
 import MovieCard from "../../component/card";
 import ModalLogin from "../../component/modal";
 import Notification from "../../component/notif";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../contex/authContext"; // Gunakan useAuth untuk status login
 import "./home.css";
-import { getMovies } from "../../services/movie";
 
 interface Movie {
   id: number;
@@ -25,33 +24,7 @@ const HomePage = () => {
   const limit = 6;
   const [accountId, setAccountId] = useState<string | null>(null);
   const sessionId = localStorage.getItem("session_id");
-  const { setIsLogin } = useAuth(); // Ambil fungsi untuk memperbarui status login dari context
 
-  // Memeriksa token dari URL dan membuat session
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const requestToken = urlParams.get("request_token");
-
-    if (requestToken) {
-      const createSessionAndProceed = async () => {
-        try {
-          const sessionId = await createSession(requestToken);
-          if (sessionId) {
-            localStorage.setItem("session_id", sessionId);
-            setIsLogin(true); // Perbarui status login di context
-          } else {
-            console.error("Gagal membuat session ID");
-          }
-        } catch (error) {
-          console.error("Error dalam membuat session:", error);
-        }
-      };
-
-      createSessionAndProceed();
-    }
-  }, [setIsLogin]);
-
-  // Mendapatkan data film dan detail akun
   useEffect(() => {
     const fetchAllMovies = async () => {
       try {
@@ -103,7 +76,7 @@ const HomePage = () => {
   };
 
   const handleLoginRedirect = () => {
-    window.location.href = "/";
+    window.location.href = "/login";
   };
 
   const handleCloseModal = () => {

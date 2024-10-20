@@ -12,15 +12,15 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 // Komponen untuk layout utama, mengatur kapan Navbar tampil
 function AppLayout() {
   const location = useLocation();
-  const hideNavbarRoutes = ["/"]; // Routes di mana Navbar tidak akan muncul
+  const hideNavbarRoutes = ["/login"]; // Routes di mana Navbar tidak akan muncul
 
   return (
     <>
       {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/callback" element={<CallbackPage />} />
-        <Route path="/home" element={<HomePage />} />
         <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </>

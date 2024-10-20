@@ -1,23 +1,19 @@
 import axios from "axios";
 
-// Tentukan API key dan base URL untuk TMDb dari environment variables
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-const API_KEY = import.meta.env.VITE_API_KEY;
-const REDIRECT_URL = "https://web-film-test.vercel.app/home"; // Redirect langsung ke home
-
 interface RequestTokenResponse {
+  success: boolean;
+  expires_at: string;
   request_token: string;
 }
 
 interface SessionResponse {
+  success: boolean;
   session_id: string;
 }
 
-interface AccountDetails {
-  id: string;
-  name: string;
-  username: string;
-}
+// Mengambil variabel lingkungan
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 // Fungsi untuk mendapatkan request token dari TMDb
 export const getRequestToken = async (): Promise<string | null> => {
@@ -25,16 +21,27 @@ export const getRequestToken = async (): Promise<string | null> => {
     const response = await axios.get<RequestTokenResponse>(`${API_BASE_URL}/authentication/token/new`, {
       params: { api_key: API_KEY },
     });
-    return response.data.request_token;
+
+    if (response.data && response.data.request_token) {
+      // Simpan request token ke localStorage
+      console.log("Received request token:", response.data.request_token); // Log untuk debug
+      localStorage.setItem("request_token", response.data.request_token);
+      return response.data.request_token;
+    } else {
+      console.error("Request token missing in response");
+      return null;
+    }
   } catch (error) {
-    console.error("Gagal mendapatkan request token:", error);
+    console.error("Error getting request token:", error);
     return null;
   }
 };
 
-// Fungsi untuk mengarahkan pengguna ke halaman otorisasi TMDb
+// Fungsi untuk mengarahkan pengguna ke halaman otorisasi TMDb dengan redirect URL
 export const redirectToAuthorization = (requestToken: string): void => {
-  const authUrl = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=${REDIRECT_URL}`;
+  // Ganti URL localhost ke URL yang benar untuk produksi
+  const authUrl = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=https://testenterkode.vercel.app/callback`;
+  console.log("Redirecting to:", authUrl); // Log URL otorisasi
   window.location.href = authUrl;
 };
 
@@ -42,30 +49,30 @@ export const redirectToAuthorization = (requestToken: string): void => {
 export const createSession = async (requestToken: string): Promise<string | null> => {
   try {
     const response = await axios.post<SessionResponse>(`${API_BASE_URL}/authentication/session/new`, { request_token: requestToken }, { params: { api_key: API_KEY } });
-    return response.data.session_id;
+
+    if (response.data && response.data.session_id) {
+      // Simpan session ID ke localStorage
+      console.log("Session ID created:", response.data.session_id); // Log session ID
+      localStorage.setItem("session_id", response.data.session_id);
+      return response.data.session_id;
+    } else {
+      console.error("Failed to create session, response data missing");
+      return null;
+    }
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error("Gagal membuat session:", error.message);
-      console.error("Data respons:", error.response?.data); // Log untuk debugging
+      console.error("Error creating session:", error.message);
+      if (error.response) {
+        console.error("Error response data:", error.response.data);
+        console.error("Error status code:", error.response.status);
+      }
     }
     return null;
   }
 };
 
-// Fungsi untuk mendapatkan detail akun berdasarkan session_id
-export const getAccountDetails = async (sessionId: string): Promise<AccountDetails | null> => {
-  try {
-    const response = await axios.get<AccountDetails>(`${API_BASE_URL}/account`, {
-      params: { api_key: API_KEY, session_id: sessionId },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Gagal mendapatkan detail akun:", error);
-    return null;
-  }
-};
-
-// Fungsi untuk menambah atau menghapus film dari daftar favorit
+// =======================
+// Fungsi untuk menambah film ke daftar favorit
 export const addToFavorite = async (sessionId: string, accountId: string, movieId: number, isFavorite: boolean) => {
   try {
     const response = await axios.post(
@@ -73,7 +80,7 @@ export const addToFavorite = async (sessionId: string, accountId: string, movieI
       {
         media_type: "movie",
         media_id: movieId,
-        favorite: isFavorite,
+        favorite: isFavorite, // true untuk menambahkan, false untuk menghapus dari favorit
       },
       {
         params: {
@@ -84,7 +91,21 @@ export const addToFavorite = async (sessionId: string, accountId: string, movieI
     );
     return response.data;
   } catch (error) {
-    console.error("Gagal menambah film ke favorit:", error);
-    throw new Error("Gagal memperbarui favorit.");
+    console.error("Error adding movie to favorites:", error);
+  }
+};
+
+// Fungsi untuk mendapatkan account_id pengguna
+export const getAccountDetails = async (sessionId: string) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/account`, {
+      params: {
+        api_key: API_KEY,
+        session_id: sessionId,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error getting account details:", error);
   }
 };

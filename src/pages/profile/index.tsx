@@ -35,11 +35,17 @@ const ProfilePage: React.FC = () => {
 
   return (
     <div className="profile-page">
-      <h2>Your Favorite Movies</h2>
+      <h2 className="text-dark">Your Favorite Movies</h2>
       <div className="movie-grid">
         {favoriteMovies.length > 0 ? (
           favoriteMovies.map((movie) => (
-            <MovieCard key={movie.id} posterPath={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} title={movie.title} rating={movie.vote_average} onFavoriteClick={() => {} /* Tidak diperlukan aksi di sini */} />
+            <MovieCard
+              key={movie.id}
+              posterPath={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              title={movie.title}
+              rating={movie.vote_average}
+              showFavoriteButton={false} // Sembunyikan tombol di halaman profil
+            />
           ))
         ) : (
           <p>You have no favorite movies yet.</p>
