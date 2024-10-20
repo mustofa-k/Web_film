@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import "./home.css";
 import { getMovies } from "../../services/movie";
+import { addToFavorite, getAccountDetails } from "../../services/auth";
 import MovieCard from "../../component/card";
+import ModalLogin from "../../component/modal";
+import Notification from "../../component/notif";
 import { Link } from "react-router-dom";
 
 interface Movie {
@@ -12,32 +14,72 @@ interface Movie {
 }
 
 const HomePage = () => {
-  const [movies, setMovies] = useState<Movie[]>([]); // Now Playing Movies
-  const [popularMovies, setPopularMovies] = useState<Movie[]>([]); // Popular Movies
-  const [visibleMovies, setVisibleMovies] = useState(6); // Jumlah film populer yang tampil
-  const limit = 6; // Tetapkan limit untuk now playing movies
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
+  const [visibleMovies, setVisibleMovies] = useState(6);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const limit = 6;
+  const [accountId, setAccountId] = useState<string | null>(null);
+  const sessionId = localStorage.getItem("session_id");
 
-  // Gabungkan fetch Now Playing Movies dan Popular Movies dalam satu useEffect
   useEffect(() => {
     const fetchAllMovies = async () => {
       try {
-        // Fetch Now Playing Movies
         const nowPlayingMovies = await getMovies("now_playing", limit);
         setMovies(nowPlayingMovies);
-
-        // Fetch Popular Movies (dengan jumlah visibleMovies)
         const popularMoviesData = await getMovies("popular", visibleMovies);
         setPopularMovies(popularMoviesData);
+
+        if (sessionId) {
+          const accountDetails = await getAccountDetails(sessionId);
+          if (accountDetails) {
+            setAccountId(accountDetails.id);
+          }
+        }
       } catch (error) {
-        console.error("Error fetching movies:", error);
+        console.error("Error fetching movies or account details:", error);
       }
     };
 
     fetchAllMovies();
-  }, [limit, visibleMovies]); // Dependensi pada limit dan visibleMovies
+  }, [limit, visibleMovies, sessionId]);
+
+  const handleAddToFavorite = async (movieId: number) => {
+    if (sessionId && accountId) {
+      try {
+        await addToFavorite(sessionId, accountId, movieId, true);
+        setNotificationMessage("Movie added to favorites successfully!");
+        setShowNotification(true);
+
+        setTimeout(() => {
+          setShowNotification(false);
+        }, 3000);
+      } catch (error) {
+        setNotificationMessage("Failed to add movie to favorites.");
+        setShowNotification(true);
+
+        setTimeout(() => {
+          setShowNotification(false);
+        }, 3000);
+        console.error("Error adding movie to favorites:", error);
+      }
+    } else {
+      setShowLoginModal(true);
+    }
+  };
 
   const handleLoadMore = () => {
-    setVisibleMovies((prevVisibleMovies) => prevVisibleMovies + 6); // Tambah 6 film setiap kali load more
+    setVisibleMovies((prevVisibleMovies) => prevVisibleMovies + 6);
+  };
+
+  const handleLoginRedirect = () => {
+    window.location.href = "/";
+  };
+
+  const handleCloseModal = () => {
+    setShowLoginModal(false);
   };
 
   return (
@@ -50,14 +92,18 @@ const HomePage = () => {
             {"show more >>"}
           </Link>
         </div>
-        <div className="justify-content-center ">
-          <div className="row">
-            {movies.map((movie) => (
-              <div className="col-md-4 " key={movie.id}>
-                <MovieCard posterPath={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} title={movie.title} rating={movie.vote_average} onFavoriteClick={() => console.log("Added to favorite", movie.title)} />
-              </div>
-            ))}
-          </div>
+        <div className="row">
+          {movies.map((movie) => (
+            <div className="col-md-4" key={movie.id}>
+              <MovieCard
+                posterPath={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                title={movie.title}
+                rating={movie.vote_average}
+                onFavoriteClick={() => handleAddToFavorite(movie.id)}
+                showLoginModal={() => setShowLoginModal(true)} // Tambahkan showLoginModal di sini
+              />
+            </div>
+          ))}
         </div>
       </div>
 
@@ -68,23 +114,30 @@ const HomePage = () => {
             {"show more >>"}
           </Link>
         </div>
-        <div className="justify-content-center ">
-          <div className="row">
-            {popularMovies.map((movie) => (
-              <div className="col-md-4 " key={movie.id}>
-                <MovieCard posterPath={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} title={movie.title} rating={movie.vote_average} onFavoriteClick={() => console.log("Added to favorite", movie.title)} />
-              </div>
-            ))}
-          </div>
+        <div className="row">
+          {popularMovies.map((movie) => (
+            <div className="col-md-4" key={movie.id}>
+              <MovieCard
+                posterPath={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                title={movie.title}
+                rating={movie.vote_average}
+                onFavoriteClick={() => handleAddToFavorite(movie.id)}
+                showLoginModal={() => setShowLoginModal(true)} // Tambahkan showLoginModal di sini juga
+              />
+            </div>
+          ))}
         </div>
-        {visibleMovies < 30 && ( // Batasi hingga 30 film
+        {visibleMovies < 30 && (
           <div className="text-center mt-4">
-            <button className="btn btn-primary" onClick={handleLoadMore}>
+            <button className="btn btn-danger" onClick={handleLoadMore}>
               Load More
             </button>
           </div>
         )}
       </div>
+
+      <ModalLogin show={showLoginModal} handleClose={handleCloseModal} handleLoginRedirect={handleLoginRedirect} />
+      <Notification message={notificationMessage} show={showNotification} />
     </div>
   );
 };

@@ -1,0 +1,59 @@
+.profile-page {
+  padding: 20px;
+  color: #fff;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 kolom per baris */
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.movie-card {
+  background-color: #1c1c1c;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+
+.movie-card:hover {
+  transform: translateY(-10px);
+}
+
+.movie-card img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.movie-card h5 {
+  margin: 10px 0;
+  font-size: 1.2rem;
+}
+
+.movie-card p {
+  margin: 5px 0;
+  font-size: 1rem;
+  color: #ffcc00;
+}
+
+@media (max-width: 1024px) {
+  .movie-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 kolom untuk layar yang lebih kecil */
+  }
+}
+
+@media (max-width: 768px) {
+  .movie-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 kolom untuk tablet */
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-grid {
+    grid-template-columns: 1fr; /* 1 kolom untuk layar mobile */
+  }
+}

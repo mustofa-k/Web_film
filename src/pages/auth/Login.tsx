@@ -1,36 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
 import FormInput from "../../component/Input";
-import { getRequestToken, redirectToAuthorization, createSession } from "../../services/auth";
+import { getRequestToken, redirectToAuthorization } from "../../services/auth";
 import Authlayout from "../../component/layouts/AuthLyout";
 
 const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-
-  // Periksa jika ada request_token di localStorage untuk membuat session ID
-  useEffect(() => {
-    const token = localStorage.getItem("request_token");
-    console.log("Request token found:", token);
-
-    if (token) {
-      // Buat session ID dan arahkan pengguna ke halaman utama
-      const createSessionAndRedirect = async () => {
-        const sessionId = await createSession(token);
-        if (sessionId) {
-          localStorage.setItem("session_id", sessionId);
-          localStorage.removeItem("request_token"); // Bersihkan request_token setelah digunakan
-          navigate("/home"); // Arahkan ke halaman home setelah login berhasil
-        } else {
-          console.error("Failed to create session ID");
-        }
-      };
-
-      createSessionAndRedirect();
-    }
-  }, [navigate]);
 
   // Fungsi untuk menangani login dengan TMDb
   const handleLogin = async (event: React.FormEvent) => {
@@ -38,10 +16,9 @@ const LoginPage: React.FC = () => {
     setLoading(true);
 
     try {
-      // Mendapatkan request token dari TMDb
       const requestToken = await getRequestToken();
       if (requestToken) {
-        localStorage.setItem("request_token", requestToken); // Simpan token di localStorage
+        localStorage.setItem("request_token", requestToken);
         redirectToAuthorization(requestToken);
       } else {
         console.error("Failed to get request token");
@@ -55,7 +32,7 @@ const LoginPage: React.FC = () => {
 
   // Fungsi untuk melanjutkan sebagai tamu
   const handleGuestLogin = () => {
-    navigate("/home"); // Arahkan ke halaman utama sebagai tamu
+    navigate("/home");
   };
 
   return (
